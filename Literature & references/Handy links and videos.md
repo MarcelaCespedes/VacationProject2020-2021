@@ -18,3 +18,9 @@ Quick video [here](https://www.youtube.com/watch?v=yL_niDr4wJc).
 
 ## Data source for the project: AIBL study
 
+Link for AIBL [study](https://aibl.csiro.au/)
+
+Nice 30 sec summary [here](https://www.youtube.com/watch?v=ikRw_TnJ5M0).
+
+Presentation by Laureate Professor Colin Masters (senior AIBL researcher) [here](https://www.youtube.com/watch?v=oZiPq1Xl59E).
+
