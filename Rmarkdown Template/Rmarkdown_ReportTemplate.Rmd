@@ -1,0 +1,160 @@
+---
+title: 'Title of Report'
+author: 
+  - Author One (Undergraduate student, first.last@qut.edu.au) 
+date:  "`r format(Sys.time(), '%d %B, %Y')`"
+output: 
+ html_document:
+  keep_md: yes
+  number_sections: yes
+  toc: yes
+  toc_float: yes
+ word_document:
+   toc: yes
+editor_options:
+  chunk_output_type: console
+---
+  
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+<style>
+#TOC {
+  background: url("http://adni.loni.usc.edu/wp-content/uploads/2012/08/aibl-logo.jpg");
+  background-size: contain;
+  padding-top: 100px !important;
+  background-repeat: no-repeat;
+}
+</style>
+
+```{r, LoadPackages, echo= FALSE,  message=FALSE, warning=FALSE}
+
+rm(list = ls())
+library(reshape2)
+library(dplyr)
+library(ggplot2)
+library(visdat)
+library(corrplot)
+library(plotly)
+library(gridExtra)
+library(grid)
+library(knitr)
+library(kableExtra)
+options(knitr.table.format = "html") 
+```
+
+# Introduction
+
+This report introduces some handy tips and links for generating an Rmarkdown report and conducts exploratory analyses.
+
+## Rmarkdown tips by Rstudio
+
+See this [link](https://rstudio.com/wp-content/uploads/2015/02/rmarkdown-cheatsheet.pdf) for the RStudio Rmarkdown cheat sheet.
+
+This is a good YouTube video [link](https://www.youtube.com/watch?v=DNS7i2m4sB0) among others to get started quickly on using Rstudio to generate html documents using Rmarkdown.
+
+Here is another [video](https://www.youtube.com/watch?v=tKUufzpoHDE) that goes for a little longer (20 mins).
+
+
+# First analyses
+
+Here is an example of conducting preliminary analyses using R and reporting the results in Rmarkdown.
+
+Say we have some (publicly) available data, such as the famous Iris data set. To find more information about this data set do
+
+```{r, Intro}
+# ?iris  # (this opens in web browser)
+head(iris)
+
+dim(iris)  # 150 rows and 5 columns/ features
+```
+
+References:
+
+_Fisher, R. A. (1936) The use of multiple measurements in taxonomic problems. Annals of Eugenics, 7, Part II, 179–188._
+
+The data were collected by Anderson, Edgar (1935). _The irises of the Gaspe Peninsula, Bulletin of the American Iris Society, 59, 2–5._
+
+## Visualise the data
+
+First rule of data analyses is to visualise the data prior to running models or analyses. Data visualisations provide a quick and effective way to see and understand trends, outliers and patterns in the data.
+
+Is there a possible association between orchid petals and sepal features?
+
+Here are two ways to look at correlations. The first is a static plot, hover the cursor over the second plot to read the pairwise Pearson correlations. 
+
+```{r, corrplots, echo= FALSE,  message=FALSE, warning=FALSE, out.width ="100%", fig.height = 7}
+
+library(RColorBrewer)
+cor.mat<- cor(iris[, 1:4])
+corrplot(cor.mat, type = "upper", col=brewer.pal(n=8, name="RdBu"),
+         method = "number")
+
+melted_cormat<- melt(cor.mat)
+# Get upper triangle of the correlation matrix
+get_upper_tri <- function(cormat){
+  cormat[lower.tri(cormat)]<- NA
+  return(cormat)
+}
+
+upper_tri <- get_upper_tri(cor.mat)
+upper_tri  
+  
+p1<- ggplot(data = melted_cormat, aes(Var2, Var1, fill = value))+
+ geom_tile(color = "white")+
+ scale_fill_gradient2(low = "blue", high = "red", mid = "white", 
+   midpoint = 0, limit = c(-1,1), space = "Lab", 
+   name="Pearson\nCorrelation") +
+  theme_minimal()+ 
+ theme(axis.text.x = element_text(angle = 45, vjust = 1, 
+    size = 12, hjust = 1))+
+ coord_fixed() + ggtitle("Iris correlations")
+
+ggplotly(p1)
+```
+
+Code for above plots can be found [here](http://www.sthda.com/english/wiki/visualize-correlation-matrix-using-correlogram) and [here](http://www.sthda.com/english/wiki/ggplot2-quick-correlation-matrix-heatmap-r-software-and-data-visualization).
+
+There is a strong positive correlation between petal and sepal lengths. Let's look at their scatter plot. Hover the cursor over the individual points to get point data. Click on a legend group to include/ exclude that group.
+
+```{r, scatterPlots, echo= FALSE,  message=FALSE, warning=FALSE, out.width ="100%", fig.height = 7}
+p2<- ggplot(iris, aes(x = Petal.Length, y = Sepal.Length, colour = Species)) +
+  geom_point(size= 2) + theme_bw() +
+  ggtitle("Scatter plot of petal and sepal length") +
+  xlab("Petal length (cm)") + ylab("Sepal length (cm)")
+
+ggplotly(p2)
+
+```
+
+As sepal length increases, so does petal length and vice versa. It appears that they are also clustered into orchid groups. Setosa is out on its own, whereas Versicolor and Virginica seem to have less separation between them.
+
+## Fit a linear model
+
+Now that we have established there is an association between sepal and petal length, let's model it. A simple linear model was fitted, where the sepal length (outcome) is dependent on the petal length (covariate); for now we will not consider the three species clusters, and model the data set as a whole.
+
+```{r, models, echo= FALSE,  message=FALSE, warning=FALSE, out.width ="100%", fig.height = 7}
+
+mod<- lm(Sepal.Length ~ Petal.Length, data = iris)
+tbl<- signif(summary(mod)$coefficients,2)
+colnames(tbl)[1]<- "Coefficient"
+
+kable(tbl, caption = "Linear model results for Iris data set: sepal length ~ petal length.") %>%
+  kable_styling(bootstrap_options = c("striped", "hover", #"condensed", 
+                                      "responsive", "bordered"),full_width=FALSE)
+```
+
+For every one unit increase in petal length, sepal length increases by 0.41 cm.
+
+```{r, modelsPlot, echo= FALSE,  message=FALSE, warning=FALSE, out.width ="100%", fig.height = 7}
+
+p3<- ggplot(iris, aes(x = Petal.Length, y = Sepal.Length)) +
+  geom_point(size=2, colour = "gray") +
+  geom_smooth(method = "lm", se=FALSE, colour = "red", size = 2) +
+  theme_bw() +
+  ggtitle("Linear regression fit") +
+  xlab("Petal length (cm)") + ylab("Sepal length (cm)")
+
+ggplotly(p3)
+```
