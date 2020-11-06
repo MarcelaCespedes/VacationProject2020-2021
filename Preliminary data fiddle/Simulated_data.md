@@ -1,11 +1,16 @@
 __Play with synthetic data__
 
 Run R code Synthetic_data.r to simulate, visualise and do preliminary exploration of ATN data.
-Fit a smoothed curve/ plane through points. 
-What does this tell you about the relationships between the biomakers?
-What metrics can you use to interpret these associations?
-What aesthetics are important when visualising 3D data? implement them.
-What features/ associations can you describe in 3D that are limited in 2D?
+
+- Fit a smoothed curve/ plane through points. 
+
+- What does this tell you about the relationships between the biomakers?
+
+- What metrics can you use to interpret these associations?
+
+- What aesthetics are important when visualising 3D data? implement them.
+
+- What features/ associations can you describe in 3D that are limited in 2D?
 
 If possible, generate a short video/ snippet highlighting important features of this data.
 
