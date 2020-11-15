@@ -33,3 +33,9 @@ Presentation by Laureate Professor Colin Masters (senior AIBL researcher) [here]
 Good paper to peruse: it would be interesting to use these methods for the ATN, in a 3 x 3 plot to investigate for associations. It would also be of interest to see if if this was available for higher dimensional case, i.e. view two variables against a third in a null hypothesis setting (H0 is true), versus when H0 is not true.
 
 _Buja, A., Cook, D., Hofmann, H., Lawrence, M., Lee, E.K., Swayne, D.F. and Wickham, H., 2009. Statistical inference for exploratory data analysis and model diagnostics. Philosophical Transactions of the Royal Society A: Mathematical, Physical and Engineering Sciences, 367(1906), pp.4361-4383._
+
+Good R package to consider: tourr, repository and example available [here](https://github.com/ggobi/tourr).
+TODO: look up other examples and publicly available data to familiarise tourr package.
+
+Paper to accompany package available [here](https://core.ac.uk/download/pdf/6287941.pdf)
+_Wickham, H., Cook, D., Hofmann, H. and Buja, A., 2011. tourr: An R package for exploring multivariate data with projections. Journal of Statistical Software, 40(2), pp.1-18._
