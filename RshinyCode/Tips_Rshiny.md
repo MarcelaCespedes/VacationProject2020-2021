@@ -11,3 +11,7 @@
   
 __NOTE:__ The tips above are for a generic app. Since you'll be working on AIBL data, we will mount the app using the servers at work and share the app internally (I will show you how to do this). The app with AIBL data will not be mounted on the RStudio servers.
 
+
+<br>
+
+__Check the cloud storage file `RShiny_Intro` for an example of a potential layout for the app!__
